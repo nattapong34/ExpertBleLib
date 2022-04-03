@@ -8,7 +8,8 @@ import android.util.Log
 import java.lang.Math.abs
 import java.util.*
 
-class SATBLUEDOT(context: Context): ExpDevice(context) {
+class SATBLUEDOT: ExpDevice {
+    constructor(context: Context):super(context){}
     override var SERVICE_UUID: UUID =convertFromInteger(0xFFF0)
     override var CHAR_UUID: UUID=convertFromInteger(0xFFF1)
     override var advertise_name="HJ-Narigmed"

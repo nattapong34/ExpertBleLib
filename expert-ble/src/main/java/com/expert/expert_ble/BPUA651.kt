@@ -6,7 +6,8 @@ import android.content.Context
 import android.util.Log
 import java.util.*
 
-class BPUA651(context: Context) : ExpDevice(context) {
+class BPUA651: ExpDevice {
+    constructor(context: Context):super(context){}
     override var SERVICE_UUID: UUID =convertFromInteger(0x1810)
     override var CHAR_UUID: UUID =convertFromInteger(0x2a35)
     override var advertise_name="A&D_UA-651BLE"

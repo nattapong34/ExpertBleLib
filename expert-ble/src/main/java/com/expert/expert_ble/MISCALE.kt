@@ -7,7 +7,8 @@ import android.util.Log
 import java.lang.Math.abs
 import java.util.*
 
-class MISCALE(context: Context) : ExpDevice(context) {
+class MISCALE : ExpDevice{
+    constructor(context: Context):super(context){}
     override var SERVICE_UUID: UUID =convertFromInteger(0x181b)
     override var CHAR_UUID: UUID =convertFromInteger(0x2a9c)
     override var advertise_name="MIBFS"

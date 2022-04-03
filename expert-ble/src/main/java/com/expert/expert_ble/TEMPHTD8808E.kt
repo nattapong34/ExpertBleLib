@@ -6,7 +6,8 @@ import android.content.Context
 import android.util.Log
 import java.util.*
 
-class TEMPHTD8808E(context: Context): ExpDevice(context) {
+class TEMPHTD8808E: ExpDevice {
+    constructor(context: Context):super(context){}
     override var SERVICE_UUID: UUID =convertFromInteger(0xFFE0)
     override var CHAR_UUID: UUID =convertFromInteger(0xFFE1)
     override var advertise_name="HC-08"

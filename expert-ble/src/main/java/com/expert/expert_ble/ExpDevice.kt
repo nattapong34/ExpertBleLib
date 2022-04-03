@@ -20,7 +20,8 @@ import java.lang.Exception
 import java.util.*
 
 
-open class ExpDevice(context: Context) :ExpBle(context){
+open class ExpDevice :ExpBle{
+    constructor(context: Context):super(context){}
 
     var values: String = ""
     lateinit var names : ArrayList<String>
