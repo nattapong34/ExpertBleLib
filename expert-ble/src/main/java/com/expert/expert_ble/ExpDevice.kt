@@ -1,10 +1,10 @@
 package com.expert.expert_ble
 
 import android.Manifest
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
+import android.annotation.SuppressLint
+import android.bluetooth.*
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -28,7 +28,7 @@ open class ExpDevice :ExpBle{
     lateinit var devices :ArrayList<BluetoothDevice>
     open lateinit var advertise_name:String
 
-    open lateinit var SERVICE_UUID:UUID
+
     open lateinit var CHAR_UUID:UUID
     open lateinit var CONTROL_UUID: UUID
     open lateinit var MSMCONTEXT:UUID
@@ -100,6 +100,8 @@ open class ExpDevice :ExpBle{
         return false
     }
 
+
+
     public fun connect(dv:BluetoothDevice,callback:BluetoothGattCallback)
     {
         if (setDevice(dv)) {
@@ -111,6 +113,8 @@ open class ExpDevice :ExpBle{
             }
         }
     }
+
+
 
     // rest api expert
     private fun checkDevice(dv:BluetoothDevice):Boolean
@@ -150,13 +154,6 @@ open class ExpDevice :ExpBle{
     }
 
 
-    // util
-    open fun convertFromInteger(i: Int): UUID {
-        val MSB = 0x0000000000001000L
-        val LSB = -0x7fffff7fa064cb05L
-        val value = (i and -0x1).toLong()
-        return UUID(MSB or (value shl 32), LSB)
-    }
     fun ByteArray.toHexString() : String {
         return this.joinToString("") {
             java.lang.String.format("%02x", it)

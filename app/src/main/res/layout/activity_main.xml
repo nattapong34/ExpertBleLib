@@ -6,11 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/txtTempVal"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="78dp"
+        android:layout_marginEnd="79dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bnDevice"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/bnDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="143dp"
-        tools:layout_editor_absoluteY="99dp" />
+        android:layout_marginStart="101dp"
+        android:layout_marginTop="68dp"
+        android:text="Temp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,23 +1,28 @@
 package com.expert.expertblelib
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ImageButton
+import android.widget.*
 import androidx.core.app.ActivityCompat
 import com.expert.expert_ble.ExpBle
 import com.expert.expert_ble.TEMPHTD8808E
+import com.expert.expert_ble.TEMPHTD8808EListener
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,TEMPHTD8808EListener {
 
     private lateinit var m_ble: ExpBle
-     var mTemp:TEMPHTD8808E= TEMPHTD8808E(this)
+     var mTemp:TEMPHTD8808E= TEMPHTD8808E(this,this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,26 +36,21 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.bnDevice).apply{
             setOnClickListener{
-                mTemp.scanLeDevice(null,tempCallback)
-               // mTemp.scanLeDevice(mTemp.advertise_name,tempCallback)
+//                mTemp.scanLeDevice(null,tempCallback)
+//                mTemp.scanDevice(tempCallback)
+//                mTemp.scanLeDevice(mTemp.advertise_name,tempCallback)
+                mTemp.pairDevice()
+
             }
         }
 
     }
 
-    private val tempCallback: ScanCallback = object : ScanCallback() {
-
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            super.onScanResult(callbackType, result)
-            with(result.device) {
-
-
-                if (result?.device != null && result.device.address != null  && result.device.name != null) {
-                    Log.d("SCAN ", result.device.name.toString())
-                    mTemp.add(result.device)
-                }
-           //     Log.d("DEVICE", mTemp.names.toString())
-            }
-        }
+    override fun onCallBack(value: String?) {
+            Log.d("VALUE FROM CALLBACK", value!!)
+        val temp = findViewById<TextView>(R.id.txtTempVal)
+        temp.text=value!!
     }
+
+
 }
