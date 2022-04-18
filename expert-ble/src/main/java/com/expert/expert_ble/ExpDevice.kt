@@ -6,10 +6,12 @@ import android.bluetooth.*
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import android.provider.Settings.Global.putString
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -24,13 +26,9 @@ open class ExpDevice :ExpBle{
     constructor(context: Context):super(context){}
 
     var values: String = ""
-    lateinit var names : ArrayList<String>
-    lateinit var devices :ArrayList<BluetoothDevice>
     open lateinit var advertise_name:String
 
-
     open lateinit var CHAR_UUID:UUID
-    open lateinit var CONTROL_UUID: UUID
     open lateinit var MSMCONTEXT:UUID
     open lateinit var FEATURE:UUID
     open lateinit var RECCACCESS:UUID
@@ -39,38 +37,24 @@ open class ExpDevice :ExpBle{
 
     lateinit var DEVICE:BluetoothDevice
 
-    fun clear()
-    {
-        names= ArrayList()
-        devices= ArrayList()
-    }
-    fun add(dv:BluetoothDevice)
-    {
-        for(d in devices)
-        {
-            if (d.address.equals(dv.address))
-            {
-                return
-            }
-        }
-        names.add(dv.name + " " + dv.address)
-        devices.add(dv)
-    }
+    lateinit var _setting:SharedPreferences
+
+
 
     fun getCharacteristic(gatt: BluetoothGatt?): BluetoothGattCharacteristic? {
-        Log.d("UUID",SERVICE_UUID.toString() + " " + CHAR_UUID.toString())
+      //  Log.d("UUID",SERVICE_UUID.toString() + " " + CHAR_UUID.toString())
         return gatt!!.getService(SERVICE_UUID)
             .getCharacteristic(CHAR_UUID)
     }
 
     fun getCharacteristicRECACCESS(gatt: BluetoothGatt?): BluetoothGattCharacteristic? {
-        Log.d("RECACCESS UUID",SERVICE_UUID.toString() + " " + RECCACCESS.toString())
+      //  Log.d("RECACCESS UUID",SERVICE_UUID.toString() + " " + RECCACCESS.toString())
         return gatt!!.getService(SERVICE_UUID)
             .getCharacteristic(RECCACCESS)
     }
 
     fun getCharacteristicContext(gatt: BluetoothGatt?): BluetoothGattCharacteristic? {
-        Log.d("MSMCONTEXT UUID",SERVICE_UUID.toString() + " " + MSMCONTEXT.toString())
+      //  Log.d("MSMCONTEXT UUID",SERVICE_UUID.toString() + " " + MSMCONTEXT.toString())
         return gatt!!.getService(SERVICE_UUID)
             .getCharacteristic(MSMCONTEXT)
     }
@@ -102,16 +86,19 @@ open class ExpDevice :ExpBle{
 
 
 
-    public fun connect(dv:BluetoothDevice,callback:BluetoothGattCallback)
+    @SuppressLint("MissingPermission")
+    public fun connect(dv:BluetoothDevice, callback:BluetoothGattCallback):String
     {
         if (setDevice(dv)) {
             try {
                 DEVICE.connectGatt(context, true, callback)
+                return DEVICE.name
             }catch (e:Exception)
             {
 
             }
         }
+        return  "อุปกรณ์ไม่ได้ลงทะเบียน!!"
     }
 
 
@@ -119,6 +106,11 @@ open class ExpDevice :ExpBle{
     // rest api expert
     private fun checkDevice(dv:BluetoothDevice):Boolean
     {
+        if (readSetting(dv.address))
+            return true
+
+        Log.d("CHECK REGISTER",dv.address)
+
         if (Build.VERSION.SDK_INT > 9) {
             val policy = ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
@@ -136,12 +128,13 @@ open class ExpDevice :ExpBle{
         var res=result.toString().replace("Success:","")
         res=res.replace("[","")
         res=res.replace("]","")
-        Log.d("RETURN API",res)
+        //Log.d("RETURN API",res)
         var obj=JSONObject(res)
         var code=obj.getInt("code")
-        Log.d("VALUES API",code.toString())
+        //Log.d("VALUES API",code.toString())
         if (code==DEVICE_REGISTED) {
             // DEVICE = dv
+            saveSetting(dv.address,true)
             return true
         }
         else
@@ -151,6 +144,18 @@ open class ExpDevice :ExpBle{
         }
 
 
+    }
+
+    private fun saveSetting(macaddr: String,status:Boolean){
+        _setting= context.getSharedPreferences("DEVICE",Context.MODE_PRIVATE)
+        var edit = _setting.edit()
+        edit.putBoolean(macaddr,status)
+        edit.commit()
+    }
+    private fun readSetting(macaddr:String):Boolean
+    {
+        _setting= context.getSharedPreferences("DEVICE",Context.MODE_PRIVATE)
+        return _setting.getBoolean(macaddr,false)
     }
 
 

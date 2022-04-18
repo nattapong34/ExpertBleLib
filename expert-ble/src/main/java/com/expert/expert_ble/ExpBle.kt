@@ -111,7 +111,7 @@ open class ExpBle(context: Context){
 
         if (SERVICE_UUID!=null)
         {
-            Log.d("SERVICE UUID : ", SERVICE_UUID.toString())
+          //  Log.d("SERVICE UUID : ", SERVICE_UUID.toString())
             var ft= ScanFilter.Builder()
                 .setServiceUuid(ParcelUuid(SERVICE_UUID))
                 .build()

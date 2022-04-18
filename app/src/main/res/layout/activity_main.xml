@@ -7,12 +7,58 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/txtAccuName"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="127dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bnAccu"
+        app:layout_constraintTop_toBottomOf="@+id/txtAccuVal" />
+
+    <Button
+        android:id="@+id/bnAccu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="148dp"
+        android:text="ACCU"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtAccuVal"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="127dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTempName" />
+
+    <TextView
+        android:id="@+id/txtTempName"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="127dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bnDevice"
+        app:layout_constraintTop_toBottomOf="@+id/txtTempVal" />
+
+    <TextView
         android:id="@+id/txtTempVal"
         android:layout_width="129dp"
         android:layout_height="27dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="78dp"
-        android:layout_marginEnd="79dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="127dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bnDevice"
@@ -22,9 +68,10 @@
         android:id="@+id/bnDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="101dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="56dp"
         android:text="Temp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

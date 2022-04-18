@@ -13,7 +13,8 @@ import java.util.*
 
 
 interface TEMPHTD8808EListener {
-    fun onCallBack(value:String?) // pass any parameter in your onCallBack which you want to return
+    fun tempReadName(name:String?)
+    fun tempReadValue(value:String?) // pass any parameter in your onCallBack which you want to return
 }
 class TEMPHTD8808E(val listener:TEMPHTD8808EListener, context: Context): ExpDevice(context) {
 
@@ -28,9 +29,8 @@ class TEMPHTD8808E(val listener:TEMPHTD8808EListener, context: Context): ExpDevi
         characteristic: BluetoothGattCharacteristic
     ) {
         var data = characteristic.value.decodeToString()
-         Log.e("onCharacteristicRead", "${data}")
         values=data.substring(4,9)
-        listener?.onCallBack(values)
+        listener?.tempReadValue(values)
     }
 
     public fun pairDevice()
@@ -46,7 +46,7 @@ class TEMPHTD8808E(val listener:TEMPHTD8808EListener, context: Context): ExpDevi
                 if (result?.device != null && result.device.address != null  && result.device.name != null) {
                     Log.d("SCAN ", result.device.name.toString())
 //                    DEVICE = result.device
-                    connect(result.device,connectCallback)
+                    listener?.tempReadName(connect(result.device,connectCallback))
                 }
                 //     Log.d("DEVICE", mTemp.names.toString())
             }
@@ -79,7 +79,6 @@ class TEMPHTD8808E(val listener:TEMPHTD8808EListener, context: Context): ExpDevi
                 if (characteristic != null) {
                     onCharacteristicRead(gatt,characteristic)
                     val d = Log.d("temp ", values)
-
                 }
             }
 
