@@ -1,27 +1,19 @@
 package com.expert.expertblelib
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.*
-import androidx.core.app.ActivityCompat
 import com.expert.expert_ble.*
-import java.util.*
 
-class MainActivity : AppCompatActivity() ,TEMPHTD8808EListener,ACCUCHECKListener {
+class MainActivity : AppCompatActivity() ,TEMPHTD8808EListener,ACCUCHECKListener,SATBLUEDOTEListener
+,MISCALEListener,BPUA651Listener{
 
     private lateinit var m_ble: ExpBle
      var mTemp:TEMPHTD8808E= TEMPHTD8808E(this,this)
     var mAccu:ACCUCHECK= ACCUCHECK(this,this)
+    var mSAT:SATBLUEDOT= SATBLUEDOT(this,this)
+    var mMIScale:MISCALE = MISCALE(this,this)
+    var mBP:BPUA651 = BPUA651(this,this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,27 +35,75 @@ class MainActivity : AppCompatActivity() ,TEMPHTD8808EListener,ACCUCHECKListener
             }
         }
 
+        findViewById<Button>(R.id.bnSAT).apply{
+            setOnClickListener{
+                mSAT.pairDevice()
+
+            }
+        }
+
+        findViewById<Button>(R.id.bnScale).apply{
+            setOnClickListener{
+                mMIScale.pairDevice()
+
+            }
+        }
+        findViewById<Button>(R.id.bnBP).apply{
+            setOnClickListener{
+                mBP.pairDevice()
+
+            }
+        }
     }
 
     override fun tempReadName(name: String?) {
-        val temp = findViewById<TextView>(R.id.txtTempName)
-        temp.text=name!!
+        val txt = findViewById<TextView>(R.id.txtTempName)
+        txt.text=name!!
     }
 
     override fun tempReadValue(value: String?) {
-            Log.d("VALUE FROM CALLBACK", value!!)
-        val temp = findViewById<TextView>(R.id.txtTempVal)
-        temp.text=value!!
+        val txt = findViewById<TextView>(R.id.txtTempVal)
+        txt.text=value!!
     }
 
     override fun AccuReadName(name: String?) {
-        val acc = findViewById<TextView>(R.id.txtAccuName)
-        acc.text=name!!
+        val txt = findViewById<TextView>(R.id.txtAccuName)
+        txt.text=name!!
     }
 
     override fun AccuReadValue(value: String?) {
-        val acc = findViewById<TextView>(R.id.txtAccuVal)
-        acc.text=value!!
+        val txt = findViewById<TextView>(R.id.txtAccuVal)
+        txt.text=value!!
+    }
+
+    override fun bluedotReadName(name: String?) {
+        val txt = findViewById<TextView>(R.id.txtSATName)
+        txt.text=name!!
+    }
+
+    override fun bluedotValue(value: String?) {
+        val txt = findViewById<TextView>(R.id.txtSATVal)
+        txt.text=value!!
+    }
+
+    override fun miscaleReadName(name: String?) {
+        val txt = findViewById<TextView>(R.id.txtScaleName)
+        txt.text=name!!
+    }
+
+    override fun miscaleValue(value: String?) {
+        val txt = findViewById<TextView>(R.id.txtScaleVal)
+        txt.text=value!!
+    }
+
+    override fun bpReadName(name: String?) {
+        val txt = findViewById<TextView>(R.id.txtBPName)
+        txt.text=name!!
+    }
+
+    override fun bpReadValue(value: String?) {
+        val txt = findViewById<TextView>(R.id.txtBPVal)
+        txt.text=value!!
     }
 
 

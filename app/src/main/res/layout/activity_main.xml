@@ -7,12 +7,134 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/txtBPName"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/bnAccu"
+        app:layout_constraintTop_toBottomOf="@+id/txtBPVal" />
+
+    <Button
+        android:id="@+id/bnBP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="48dp"
+        android:text="BP"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bnScale" />
+
+    <TextView
+        android:id="@+id/txtBPVal"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtScaleName" />
+
+    <TextView
+        android:id="@+id/txtScaleName"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/bnAccu"
+        app:layout_constraintTop_toBottomOf="@+id/txtScaleVal" />
+
+    <Button
+        android:id="@+id/bnScale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="48dp"
+        android:text="Scale"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bnSAT" />
+
+    <TextView
+        android:id="@+id/txtScaleVal"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSATName" />
+
+    <TextView
+        android:id="@+id/txtSATName"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/bnAccu"
+        app:layout_constraintTop_toBottomOf="@+id/txtSATVal" />
+
+    <Button
+        android:id="@+id/bnSAT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="44dp"
+        android:text="SAT"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bnAccu" />
+
+    <TextView
+        android:id="@+id/txtSATVal"
+        android:layout_width="129dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtAccuName" />
+
+    <TextView
         android:id="@+id/txtAccuName"
         android:layout_width="129dp"
         android:layout_height="27dp"
         android:layout_marginStart="23dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bnAccu"
@@ -23,10 +145,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="44dp"
         android:text="ACCU"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/bnDevice" />
 
     <TextView
         android:id="@+id/txtAccuVal"
@@ -35,6 +157,8 @@
         android:layout_marginStart="155dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +171,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="13dp"
         android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bnDevice"
@@ -57,8 +183,10 @@
         android:layout_width="129dp"
         android:layout_height="27dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="127dp"
+        android:background="#E9F1F8"
+        android:shadowColor="#3F51B5"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bnDevice"
@@ -69,7 +197,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="47dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="75dp"
         android:text="Temp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

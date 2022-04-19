@@ -25,7 +25,7 @@ open class ExpBle(context: Context){
     private val handler = Handler()
 
     open lateinit var SERVICE_UUID:UUID
-
+    open lateinit var ADV_UUID:UUID
     lateinit var mListdevice:ArrayList<BluetoothDevice>
 
 
@@ -109,11 +109,11 @@ open class ExpBle(context: Context){
 
         var filters: List<ScanFilter>? = null
 
-        if (SERVICE_UUID!=null)
+        if (ADV_UUID!=null)
         {
           //  Log.d("SERVICE UUID : ", SERVICE_UUID.toString())
             var ft= ScanFilter.Builder()
-                .setServiceUuid(ParcelUuid(SERVICE_UUID))
+                .setServiceUuid(ParcelUuid(ADV_UUID))
                 .build()
             filters = listOf(ft)
 

@@ -17,7 +17,7 @@ interface TEMPHTD8808EListener {
     fun tempReadValue(value:String?) // pass any parameter in your onCallBack which you want to return
 }
 class TEMPHTD8808E(val listener:TEMPHTD8808EListener, context: Context): ExpDevice(context) {
-
+    override var ADV_UUID: UUID =convertFromInteger(0xFFE0)
     override var SERVICE_UUID: UUID =convertFromInteger(0xFFE0)
     override var CHAR_UUID: UUID =convertFromInteger(0xFFE1)
     override var advertise_name="HC-08"
@@ -40,6 +40,7 @@ class TEMPHTD8808E(val listener:TEMPHTD8808EListener, context: Context): ExpDevi
 
     private val callbackScan: ScanCallback = object : ScanCallback() {
 
+        @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
             with(result.device) {

@@ -20,7 +20,7 @@ interface ACCUCHECKListener {
     fun AccuReadValue(value:String?) // pass any parameter in your onCallBack which you want to return
 }
 class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(context) {
-
+    override var ADV_UUID: UUID =convertFromInteger(0x1808)
     override var SERVICE_UUID: UUID =convertFromInteger(0x1808)
     override var CHAR_UUID: UUID =convertFromInteger(0x2a18)
     override var advertise_name="HJ-Narigmed"
