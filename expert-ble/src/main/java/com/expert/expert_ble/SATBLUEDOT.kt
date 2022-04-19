@@ -64,6 +64,9 @@ class SATBLUEDOT(val listener:SATBLUEDOTEListener, context: Context): ExpDevice(
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
                 gatt!!.discoverServices()
+            }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
+            {
+                Log.d(DEVICE.name,"DISCONNECTED")
             }
         }
 

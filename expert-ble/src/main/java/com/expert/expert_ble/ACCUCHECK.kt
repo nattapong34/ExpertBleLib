@@ -1,19 +1,13 @@
 package com.expert.expert_ble
 
-import android.R
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.*
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import java.util.*
+
 
 interface ACCUCHECKListener {
     fun AccuReadName(name:String?)
@@ -27,8 +21,9 @@ class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(co
     override var MSMCONTEXT:UUID =convertFromInteger(0x2a34)
     override var FEATURE:UUID =convertFromInteger(0x2a51)
     override var RECCACCESS:UUID =convertFromInteger(0x2a52)
+    private var FIRSTREC: ByteArray = ByteArray(0x0101)
     private var LASTREC: ByteArray = ByteArray(0x0106)
-
+    var mCONFIG=convertFromInteger(0x2902)
     public fun pairDevice()
     {
         scanDevice(callbackScan)
@@ -67,24 +62,59 @@ class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(co
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
                 gatt!!.discoverServices()
+            }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
+            {
+                Log.d(DEVICE.name,"DISCONNECTED")
             }
         }
 
         @SuppressLint("MissingPermission")
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
+//            val services = gatt!!.services
+////            Log.i("onServicesDiscovered", services.toString())
+//            for (gattService:BluetoothGattService in services)
+//            {
+//                val serviceUUID = gattService.uuid.toString()
+//                Log.i("SERVICE UUID :",serviceUUID)
+//              //  if (serviceUUID.equals(CHAR_UUID))
+//               // {
+//                    for(characteristic:BluetoothGattCharacteristic in gattService.characteristics)
+//                    {
+//                        Log.i("onCharacteristicRead " + characteristic.properties +" ", "" + characteristic.uuid);
+//                        if (characteristic.properties==16)
+//                        {
+//                           var somchar= gatt.getService(gattService.uuid).getCharacteristic(characteristic.uuid)
+//                            gatt!!.setCharacteristicNotification(somchar, true)
+//                        }
+//                    }
+//              //  }
+//            }
 
-            if (!gatt!!.setCharacteristicNotification(getCharacteristic(gatt), true)) {
-                Log.e("NOTIFY FIELD", "characteristic")
-            }else
-            {
-                var char = getCharacteristicRECACCESS(gatt)
-                Log.d("ACCESS", char.toString())
-                char!!.value =LASTREC
-                if (gatt!!.writeCharacteristic(char)) {
-                    Log.d("Write ", "characteristic lastrec")
-                }
+            if (status==BluetoothGatt.GATT_SUCCESS){
+                    if (gatt!!.setCharacteristicNotification(getCharacteristic(gatt), true)) {
+
+                        var data = byteArrayOfInts(0x01,0x06)
+
+                        var char = getCharacteristicRECACCESS(gatt)
+                        Log.d("ACCESS", char.toString())
+                        char!!.value = data
+
+                        char!!.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                        if (gatt!!.writeCharacteristic(char)) {
+                            Log.d("Write ", "characteristic lastrec")
+                        }
+                    }
             }
+        }
+
+        override fun onCharacteristicRead(
+            gatt: BluetoothGatt?,
+            characteristic: BluetoothGattCharacteristic?,
+            status: Int
+        ) {
+            super.onCharacteristicRead(gatt, characteristic, status)
+            Log.i("onCharacteristicRead", characteristic.toString());
 
         }
 
@@ -93,6 +123,7 @@ class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(co
             characteristic: BluetoothGattCharacteristic?
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
+            Log.i("on characteristicchange",characteristic!!.value.toString())
             if (gatt != null) {
                 if (characteristic != null) {
                     onCharacteristicRead(gatt,characteristic)
@@ -102,6 +133,8 @@ class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(co
 
         }
     }
+
+    fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
 
 
 }

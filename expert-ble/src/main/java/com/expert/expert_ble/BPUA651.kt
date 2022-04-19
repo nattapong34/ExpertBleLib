@@ -1,10 +1,7 @@
 package com.expert.expert_ble
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.*
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
@@ -21,6 +18,7 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
     override var SERVICE_UUID: UUID =convertFromInteger(0x1810)
     override var CHAR_UUID: UUID =convertFromInteger(0x2a35)
     override var advertise_name="A&D_UA-651BLE"
+    var mCONFIG=convertFromInteger(0x2902)
     override fun onCharacteristicRead(
         gatt: BluetoothGatt,
         characteristic: BluetoothGattCharacteristic
@@ -31,6 +29,7 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
         var dia=data[3]
         var pul=data[7]
         values= "$sys,$dia,$pul"
+        Log.d("BP Value:",values)
         listener?.bpReadValue(values)
     }
 
@@ -61,7 +60,11 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
             super.onConnectionStateChange(gatt, status, newState)
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
+                Log.d("BP:","CONNECTED")
                 gatt!!.discoverServices()
+            }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
+            {
+                Log.d(DEVICE.name,"DISCONNECTED")
             }
         }
 
@@ -69,6 +72,18 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
             gatt!!.setCharacteristicNotification(getCharacteristic(gatt), true)
+
+            var characteristic=getCharacteristic(gatt)
+            var descriptor=characteristic!!.getDescriptor(mCONFIG)
+            descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+            descriptor.value= BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+            if (gatt.writeDescriptor(descriptor))
+            {
+                Log.d("DESCRIPTOR","Write ok")
+            }else
+            {
+                Log.e("DESCRIPTOR Error","Write")
+            }
         }
 
         override fun onCharacteristicChanged(

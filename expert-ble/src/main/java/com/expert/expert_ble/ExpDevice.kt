@@ -106,8 +106,10 @@ open class ExpDevice :ExpBle{
     // rest api expert
     private fun checkDevice(dv:BluetoothDevice):Boolean
     {
-        if (readSetting(dv.address))
+        if (readSetting(dv.address)) {
+            Log.d("DEVICES is registed:","Ready to connect")
             return true
+        }
 
         Log.d("CHECK REGISTER",dv.address)
 

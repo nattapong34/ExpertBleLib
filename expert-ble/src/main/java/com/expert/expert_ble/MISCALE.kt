@@ -63,6 +63,9 @@ class MISCALE(val listener:MISCALEListener, context: Context): ExpDevice(context
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
                 gatt!!.discoverServices()
+            }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
+            {
+                Log.d(DEVICE.name,"DISCONNECTED")
             }
         }
 

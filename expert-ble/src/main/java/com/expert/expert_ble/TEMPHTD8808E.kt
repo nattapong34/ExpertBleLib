@@ -61,6 +61,9 @@ class TEMPHTD8808E(val listener:TEMPHTD8808EListener, context: Context): ExpDevi
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
                 gatt!!.discoverServices()
+            }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
+            {
+                Log.d(DEVICE.name,"DISCONNECTED")
             }
         }
 
