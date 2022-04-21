@@ -19,15 +19,28 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
     override var CHAR_UUID: UUID =convertFromInteger(0x2a35)
     override var advertise_name="A&D_UA-651BLE"
     var mCONFIG=convertFromInteger(0x2902)
+
+    @SuppressLint("MissingPermission")
     override fun onCharacteristicRead(
         gatt: BluetoothGatt,
         characteristic: BluetoothGattCharacteristic
     ) {
         var data:ByteArray = characteristic.value
-         Log.e("onCharacteristicRead", "${data.decodeToString()}")
-        var sys=data[1]
+         Log.e("onCharacteristicRead", "${data.toHexString()}")
+
+        var sys=when(data[1].toInt()<0){true->256+data[1].toInt()
+            false->data[1].toInt()}
+
         var dia=data[3]
-        var pul=data[7]
+//        var pul=when(DEVICE.name == "BM57") {
+//            true-> data[14]
+//            false->data[7]
+//        }
+        var pul =data[7]
+        if (DEVICE.name=="BM57")
+        {
+            pul=data[14]
+        }
         values= "$sys,$dia,$pul"
         Log.d("BP Value:",values)
         listener?.bpReadValue(values)
@@ -54,6 +67,7 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
         }
     }
 
+
     private val connectCallback: BluetoothGattCallback = object: BluetoothGattCallback(){
         @SuppressLint("MissingPermission")
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
@@ -66,32 +80,45 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
             {
                 Log.d(DEVICE.name,"DISCONNECTED")
             }
+
+                Log.d("STATE",newState.toString())
+
         }
 
         @SuppressLint("MissingPermission")
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
-            gatt!!.setCharacteristicNotification(getCharacteristic(gatt), true)
 
             var characteristic=getCharacteristic(gatt)
-            var descriptor=characteristic!!.getDescriptor(mCONFIG)
-            descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-            descriptor.value= BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
-            if (gatt.writeDescriptor(descriptor))
-            {
-                Log.d("DESCRIPTOR","Write ok")
-            }else
-            {
-                Log.e("DESCRIPTOR Error","Write")
+
+//
+//            if (gatt!!.writeDescriptor(descriptor)){
+//                Log.d("writeDescriptor befor","OK")
+//            }
+
+            if (gatt!!.setCharacteristicNotification(getCharacteristic(gatt), true)){
+                Log.d("setCharacteristicNotification","OK")
+                Thread.sleep(1000)
+
+                var descriptor= characteristic!!.getDescriptor(mCONFIG)
+                descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                descriptor.value= BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+                if (gatt!!.writeDescriptor(descriptor)){
+                    Log.d("writeDescriptor","OK")
+                }else{
+                    Log.e("writeDescriptor","error")
+                }
             }
+
         }
 
+        @SuppressLint("MissingPermission")
         override fun onCharacteristicChanged(
             gatt: BluetoothGatt?,
             characteristic: BluetoothGattCharacteristic?
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
-
+           // Log.d("CHARACTERISTIC Change",characteristic!!.uuid.toString())
             if (gatt != null) {
                 if (characteristic != null) {
                     onCharacteristicRead(gatt,characteristic)

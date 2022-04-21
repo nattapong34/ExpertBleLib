@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "ExpertBleLib"
 include ':app'
 include ':expert-ble'
+include ':expert-ble:androidlib'
