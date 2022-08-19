@@ -12,6 +12,7 @@ import java.util.*
 interface ACCUCHECKListener {
     fun AccuReadName(name:String?)
     fun AccuReadValue(value:String?) // pass any parameter in your onCallBack which you want to return
+    fun AccuStatus(state:String?)
 }
 class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(context) {
     override var ADV_UUID: UUID =convertFromInteger(0x1808)
@@ -24,6 +25,15 @@ class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(co
     private var FIRSTREC: ByteArray = ByteArray(0x0101)
     private var LASTREC: ByteArray = ByteArray(0x0106)
     var mCONFIG=convertFromInteger(0x2902)
+
+    public fun startConnect(addr:String){
+        MACADDR=addr
+        //var dv: BluetoothDevice? =readDevice()
+        Log.d("temp ", MACADDR)
+        var device:BluetoothDevice  = connectMacaddr(MACADDR);
+        device?.let { listener?.AccuReadName(connect(it,connectCallback)) }
+    }
+
     public fun pairDevice()
     {
         scanDevice(callbackScan)
@@ -61,9 +71,11 @@ class ACCUCHECK(val listener:ACCUCHECKListener, context: Context) : ExpDevice(co
             super.onConnectionStateChange(gatt, status, newState)
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
+                listener?.AccuStatus("Connected")
                 gatt!!.discoverServices()
             }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
             {
+                listener?.AccuStatus("Disconnected")
                 Log.d(DEVICE.name,"DISCONNECTED")
             }
         }

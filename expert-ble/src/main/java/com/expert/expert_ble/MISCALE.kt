@@ -12,6 +12,7 @@ import java.util.*
 interface MISCALEListener {
     fun miscaleReadName(name:String?)
     fun miscaleValue(value:String?) // pass any parameter in your onCallBack which you want to return
+    fun miscaleStatus(state:String?)
 }
 class MISCALE(val listener:MISCALEListener, context: Context): ExpDevice(context) {
 
@@ -34,6 +35,13 @@ class MISCALE(val listener:MISCALEListener, context: Context): ExpDevice(context
         Log.d("WEIGHT",sum.toString())
         values=String.format("%.2f",sum)
         listener?.miscaleValue(values)
+    }
+    public fun startConnect(addr:String){
+        MACADDR=addr
+        //var dv: BluetoothDevice? =readDevice()
+        Log.d("temp ", MACADDR)
+        var device:BluetoothDevice  = connectMacaddr(MACADDR);
+        device?.let { listener?.miscaleReadName(connect(it,connectCallback)) }
     }
     public fun pairDevice()
     {
@@ -62,10 +70,12 @@ class MISCALE(val listener:MISCALEListener, context: Context): ExpDevice(context
             Log.d("SCALE STATE",newState.toString())
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
+                listener?.miscaleStatus("Connected")
                 gatt!!.discoverServices()
             }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
             {
                 Log.d(DEVICE.name,"DISCONNECTED")
+                listener?.miscaleStatus("Disconnected")
             }
         }
 

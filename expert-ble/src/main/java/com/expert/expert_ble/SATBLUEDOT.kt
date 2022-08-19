@@ -1,10 +1,7 @@
 package com.expert.expert_ble
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.*
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.ContentValues
@@ -17,6 +14,7 @@ import java.util.*
 interface SATBLUEDOTEListener {
     fun bluedotReadName(name:String?)
     fun bluedotValue(value:String?) // pass any parameter in your onCallBack which you want to return
+    fun bluedotStatus(state:String?)
 }
 class SATBLUEDOT(val listener:SATBLUEDOTEListener, context: Context): ExpDevice(context) {
     override var ADV_UUID: UUID =convertFromInteger(0xFFB0)
@@ -35,6 +33,14 @@ class SATBLUEDOT(val listener:SATBLUEDOTEListener, context: Context): ExpDevice(
                 values=data[3].toString()
                 listener?.bluedotValue(values)
             }
+    }
+
+    public fun startConnect(addr:String){
+        MACADDR=addr
+        //var dv: BluetoothDevice? =readDevice()
+        Log.d("temp ", MACADDR)
+        var device: BluetoothDevice = connectMacaddr(MACADDR);
+        device?.let { listener?.bluedotReadName(connect(it,connectCallback)) }
     }
 
     public fun pairDevice()
@@ -63,10 +69,12 @@ class SATBLUEDOT(val listener:SATBLUEDOTEListener, context: Context): ExpDevice(
             super.onConnectionStateChange(gatt, status, newState)
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
+                listener?.bluedotStatus("Connected")
                 gatt!!.discoverServices()
             }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
             {
                 Log.d(DEVICE.name,"DISCONNECTED")
+                listener?.bluedotStatus("Disconnected")
             }
         }
 

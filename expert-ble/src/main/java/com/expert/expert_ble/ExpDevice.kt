@@ -1,24 +1,18 @@
 package com.expert.expert_ble
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.*
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import android.provider.Settings.Global.putString
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.jsonBody
+import com.google.gson.Gson
 import org.json.JSONObject
-import java.lang.Exception
 import java.util.*
 
 
@@ -38,6 +32,8 @@ open class ExpDevice :ExpBle{
     lateinit var DEVICE:BluetoothDevice
 
     lateinit var _setting:SharedPreferences
+
+    public var MACADDR: String=""
 
 
 
@@ -104,7 +100,7 @@ open class ExpDevice :ExpBle{
 
 
     // rest api expert
-    private fun checkDevice(dv:BluetoothDevice):Boolean
+    public fun checkDevice(dv:BluetoothDevice):Boolean
     {
         if (readSetting(dv.address)) {
             Log.d("DEVICES is registed:","Ready to connect")
@@ -137,6 +133,7 @@ open class ExpDevice :ExpBle{
         if (code==DEVICE_REGISTED) {
             // DEVICE = dv
             saveSetting(dv.address,true)
+            this.MACADDR=dv.address;
             return true
         }
         else

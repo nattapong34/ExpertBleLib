@@ -51,6 +51,10 @@ open class ExpBle(context: Context){
         }
 
     }
+    public fun connectMacaddr(addr:String): BluetoothDevice {
+       return  m_Adapter.getRemoteDevice(addr);
+    }
+
     @SuppressLint("MissingPermission")
     @RequiresPermission(Manifest.permission.BLUETOOTH_ADMIN)
 

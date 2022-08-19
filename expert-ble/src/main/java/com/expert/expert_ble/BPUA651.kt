@@ -11,6 +11,7 @@ import java.util.*
 interface BPUA651Listener {
     fun bpReadName(name:String?)
     fun bpReadValue(value:String?) // pass any parameter in your onCallBack which you want to return
+    fun bpStatus(state:String?)
 }
 class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context) {
 
@@ -45,7 +46,13 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
         Log.d("BP Value:",values)
         listener?.bpReadValue(values)
     }
-
+    public fun startConnect(addr:String){
+        MACADDR=addr
+        //var dv: BluetoothDevice? =readDevice()
+        Log.d("temp ", MACADDR)
+        var device:BluetoothDevice  = connectMacaddr(MACADDR);
+        device?.let { listener?.bpReadName(connect(it,connectCallback)) }
+    }
     public fun pairDevice()
     {
         scanDevice(callbackScan)
@@ -74,10 +81,12 @@ class BPUA651(val listener:BPUA651Listener, context: Context): ExpDevice(context
             super.onConnectionStateChange(gatt, status, newState)
             if (newState== BluetoothAdapter.STATE_CONNECTED)
             {
+                listener?.bpStatus("Connected")
                 Log.d("BP:","CONNECTED")
                 gatt!!.discoverServices()
             }else if (newState==BluetoothAdapter.STATE_DISCONNECTED)
             {
+                listener?.bpStatus("Disconnected")
                 Log.d(DEVICE.name,"DISCONNECTED")
             }
 
